@@ -4,10 +4,10 @@ import psycopg2
 import calendar
 from datetime import datetime
 
-class DatabaseApp:
+class GUIConnect:
     def __init__(self, root):
         self.root = root
-        self.root.title("DatabaseApp")
+        self.root.title("Connect")
 
         self.db_name = tk.StringVar(value='dbtest')
         self.user = tk.StringVar(value='postgres')
@@ -121,24 +121,21 @@ class BookingCalendarApp:
         self.tree.heading('Day', text='Day')
         self.tree.pack(fill=tk.BOTH, expand=True)
 
-        # Khung nút hành động
+        # Khung button
         self.action_buttons_frame = ttk.Frame(self.main_frame)
         self.action_buttons_frame.pack(pady=10)
 
-        # Nút Xóa
+        # Nút Delete
         self.btn_delete = ttk.Button(self.action_buttons_frame, text="Delete", command=self.delete_booking)
         self.btn_delete.pack(pady=10)
 
-        # Nút Đóng ở dưới cùng
+        # Nút Close
         self.btn_close = ttk.Button(self.action_buttons_frame, text="Close", command=self.root.quit)
         self.btn_close.pack(pady=10)
 
     def update_calendar(self):
-        # Xóa hiển thị lịch hiện tại
-        for widget in self.calendar_frame.winfo_children():
-            widget.destroy()
 
-        # Tạo lịch cho tháng hiện tại
+        # Tạo lịch 
         days_in_month = calendar.monthrange(self.current_year, self.current_month)[1]
 
         for day in range(1, days_in_month + 1):
@@ -158,18 +155,15 @@ class BookingCalendarApp:
             messagebox.showerror("Error", "Please enter your name and service.")
             return
         
-        # Chèn đặt chỗ vào database
         self.cursor.execute(
             "INSERT INTO bookdays (name, service, day) VALUES (%s, %s, %s)",
             (name, service, f"{day}/{self.current_month}/{self.current_year}")
         )
         self.conn.commit()
 
-        # Cập nhật Treeview với dữ liệu từ database
         self.load_bookings()
 
     def load_bookings(self):
-        # Tải đặt chỗ từ database và hiển thị trong Treeview
         self.tree.delete(*self.tree.get_children())
         self.cursor.execute("SELECT * FROM bookdays")
         bookings = self.cursor.fetchall()
@@ -181,19 +175,18 @@ class BookingCalendarApp:
         if selected:
             for item in selected:
                 item_values = self.tree.item(item, 'values')
-                # Xóa đặt chỗ khỏi database
                 self.cursor.execute(
                     "DELETE FROM bookdays WHERE id = %s",
-                    (item_values[0],)  # Giả sử cột đầu tiên là ID
+                    (item_values[0],)  
                 )
                 self.conn.commit()
-                self.tree.delete(item)  # Xóa khỏi Treeview
+                self.tree.delete(item)  
             messagebox.showinfo("Success", "Selected bookings deleted successfully.")
         else:
             messagebox.showwarning("Warning", "No booking selected.")
 
     def change_month(self, delta):
-        # Thay đổi tháng và cập nhật lịch
+        # update calendar
         self.current_month += delta
         if self.current_month < 1:
             self.current_month = 12
@@ -206,6 +199,6 @@ class BookingCalendarApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
-    app = DatabaseApp(root)
+    app = GUIConnect(root)
     root.mainloop()
 
