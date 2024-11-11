@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="keywords" content="app, landing, corporate, Creative, Html Template, Template">
+    <meta name="author" content="web-themes">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/fontawesome.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/owl.carousel.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/sanpham.css') }}">
+    <title>Trang chủ</title>
+    <style>
+        .hidden {
+            display: none;
+        }
+        
+    </style>
+</head>
+<body>
+    <div id="menu">
+    <ul>
+        <li><a href="/">Trang chủ</a></li>
+        <li><a href="/cart">Giỏ hàng</a></li>
+        <li><a href="/product">Sản phẩm</a></li>
+        <li><a href="/contact">Liên hệ</a></li>
+        <li><a href="/login">Đăng nhập</a>
+        <li><a href="/products">Quản lý</a>
+        </li>
+    </ul>  
+    </div>
+
+    <section id="page-header" class="text">
+    </section>
+
+<div class="card_wrapper_2">
+  <div class="container">
+      <div class="row">
+          <div class="col-12 text-center">
+              <h2 class="head_text">Sản phẩm nổi bật</h2>
+          </div>
+          <div class="col-12">
+            <div class="owl-carousel slider_carousel">
+                {% if products %}
+                    {% for product in products %}
+                        <div class="card_box">
+                            <div class="card_text">
+                                <a href="sanpham/sanphamnam/{{ product.name | lower | replace(' ', '') }}.html">
+                                    <h4>{{ product[1] }}</h4>
+                                </a>
+                                <p>Giá cũ: {{ product[3] }}đ</p>
+                                <p>Giá mới: {{ product[4] }}đ</p>
+                                <p>Danh mục: {{ product[2] }}</p>
+                                <p>Đánh giá: 4/5</p>
+                            </div>
+                            <div class="d-grid gap-2 mt-2">
+                                <form action="{{ url_for('add_to_cart', product_id=product[0]) }}" method="POST">
+                                    <button type="submit" class="btn btn-primary">Thêm giỏ hàng</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>Không có sản phẩm nào để hiển thị.</p>
+                {% endif %}
+            </div>
+        </div>
+      </div>
+  </div>
+</div>
+
+
+
+<script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/owl.carousel.min.js') }}"></script>
+<script>
+  
+  function slider_carouselInit() {
+      $('.owl-carousel.slider_carousel').owlCarousel({
+          dots: false,
+          loop: true,
+          margin: 30,
+          stagePadding: 2,
+          autoplay: false,
+          nav: true,
+          navText: ["<i class='far fa-arrow-alt-circle-left'></i>","<i class='far fa-arrow-alt-circle-right'></i>"],
+          autoplayTimeout: 1500,
+          autoplayHoverPause: true,
+          responsive: {
+              0: {
+                  items: 1
+              },
+              768: {
+                  items: 2,
+              },
+              992: {
+                  items: 5
+              }
+          }
+      });
+  }
+  slider_carouselInit();
+</script>
+
+
+<div class="bottom">
+    <div class="bottom_content1">
+      <h3>PANU SHOP</h3>
+      <p>
+        Địa chỉ: 69/68 Đặng Thuỳ Trâm,Phường 13, Bình Thạnh,Thành phố Hồ Chí Minh
+      </p>
+    </div>
+    <div class="bottom_content2">
+      <h3>Dịch Vụ</h3>
+      <p><a href="">Điều khoản sử dụng</a></p>
+      <p>Chính sách bảo mật thông tin</p>
+      <p>Chính sách bảo mật thanh toán</p>
+    </div>
+    <div class="bottom_content3">
+      <h3>Phương Châm</h3>
+      <p>An toàn cho thú cưng</p>
+      <p><a href="">Giá rẻ cho mọi nhà</a></p>
+      <p>Phục vụ chu đáo</p>
+    </div>
+    <div class="bottom_content4">
+        <h3>Thông tin liên lạc</h3>
+        <p>SĐT : 0981645227</p>
+        <p>Email : phanpanda95@gmail.com</p>
+    </div>
+  </div>
+</body>
+</html>

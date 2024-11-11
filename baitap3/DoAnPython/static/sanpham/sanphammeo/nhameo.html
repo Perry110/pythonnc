@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="../csssp/style.css" />
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="keywords" content="app, landing, corporate, Creative, Html Template, Template">
+  <meta name="author" content="web-themes">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="../csssp/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <link href="../csssp/fontawesome.min.css" rel="stylesheet" type="text/css" />
+  <link href="../csssp/owl.carousel.min.css" rel="stylesheet" type="text/css" />
+  <link href="../csssp/sanpham.css" rel="stylesheet" type="text/css" />
+    <title>Thanh toán</title>
+    <style>
+      
+  </style>
+
+      
+
+</head>
+<body>
+    <div id="menu">
+        <ul>
+            <li><a href="home.html">Trang chủ</a></li>
+            <li><a href="#">Dịch vụ</a></li>
+            <li><a href="/product.html">Sản phẩm</a></li>
+            <li><a href="#">Giới thiệu</a></li>
+            <li><a href="#">Liên hệ</a></li>
+        </ul>  
+      </div>
+
+    <section id="page-header" class="text">
+
+    </section>
+
+
+
+<div class="card_wrapper_2">
+  <table>
+    <tr>
+        <td class="image-cell">
+            <img src="../anh/meo/home.jpg" alt="Hình ảnh sản phẩm" style="height: 500px;">
+        </td>
+        <td class="info-cell">
+            <h2>Cây leo mèo</h2>
+            <p>Mô tả sản phẩm:</p>
+            <ul>
+                <li>-Tạo cảm giác mạnh cho mèo</li>
+                <li>-Dễ dàng tháo lắp</li>
+            </ul>
+            <p>Giá: 130.000đ</p>
+            <button id="muaButton">Mua sản phẩm</button> 
+
+        </td>
+    </tr>
+</table>
+</div>
+
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/owl.carousel.min.js"></script>
+<script>
+  
+  function slider_carouselInit() {
+      $('.owl-carousel.slider_carousel').owlCarousel({
+          dots: false,
+          loop: true,
+          margin: 30,
+          stagePadding: 2,
+          autoplay: false,
+          nav: true,
+          navText: ["<i class='far fa-arrow-alt-circle-left'></i>","<i class='far fa-arrow-alt-circle-right'></i>"],
+          autoplayTimeout: 1500,
+          autoplayHoverPause: true,
+          responsive: {
+              0: {
+                  items: 1
+              },
+              768: {
+                  items: 2,
+              },
+              992: {
+                  items: 5
+              }
+          }
+      });
+  }
+  slider_carouselInit();
+
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function hienThongBao() {
+        alert('Bạn đã mua sản phẩm!'); 
+    }
+
+    $(document).ready(function() {
+        $('#muaButton').click(function() {
+            hienThongBao();
+        });
+    });
+</script>
+
+
+<div class="bottom">
+    <div class="bottom_content1">
+      <h3>PANU SHOP</h3>
+      <p>
+        Địa chỉ: 69/68 Đặng Thuỳ Trâm,Phường 13, Bình Thạnh,Thành phố Hồ Chí Minh
+      </p>
+    </div>
+    <div class="bottom_content2">
+      <h3>Dịch Vụ</h3>
+      <p><a href="">Điều khoản sử dụng</a></p>
+      <p>Chính sách bảo mật thông tin</p>
+      <p>Chính sách bảo mật thanh toán</p>
+       
+    </div>
+    <div class="bottom_content3">
+      <h3>Phương Châm</h3>
+      <p>Khách hàng là thượng đế</p>
+      
+      <p><a href="">Giá rẻ cho mọi nhà</a></p>
+      <p>Phục vụ chu đáo</p>
+    </div>
+    <div class="bottom_content4">
+        
+        <h3>Social Network</h3>
+        <p>SĐT : 0981645227</p>
+        <p>Email : phanpanda95@gmail.com</p>
+    </div>
+  </div>
+
+
+    
+</body>
+</html>

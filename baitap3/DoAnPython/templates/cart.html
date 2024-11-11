@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <title>Giỏ Hàng</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/stylemanager.css') }}">
+  </head>
+  <body>
+
+    <section class="p-3">
+
+        <div class="row">
+            <div class="col-12">
+                <h2 class="text-center">Giỏ Hàng</h2>
+            </div>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert alert-success">
+                    {% for category, message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-striped table-hover mt-3 text-center table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ item[0] }}</td>
+                            <td>{{ item[1] }}</td>  
+                            <td>{{ item[2] }}đ</td>
+                            <td>{{ item[3] }}</td>
+                            <td>
+                                {% set total_price = (item[2] | float) * (item[3] | int) %}
+                                {{ total_price | round(0) }}đ
+                            </td>
+                            <td>
+                                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal"
+                                onclick="openEditModal({{ item[0] }})">
+                                <i class="bi bi-pencil"></i> Cập nhật số lượng</button>
+                            </td>
+                            <td>
+                                <form action="{{ url_for('delete_from_cart', id=item[0]) }}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i> Xóa</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <tr>
+                    <td colspan="4" class="text-end"><strong>Tổng thanh toán:</strong></td>
+                    <td><strong>{{ total_price }}đ</strong></td>
+                </tr>
+                
+                <!-- Nút thanh toán -->
+                <tr>
+                    <td colspan="6" class="text-center">
+                        <form action="{{ url_for('checkout') }}" method="POST">
+                            <button type="submit" class="btn btn-success">Thanh toán</button>
+                        </form>
+                    </td>
+                </tr>
+                
+                {% if success_message %}
+                    <tr>
+                        <td colspan="6" class="text-center text-success">{{ success_message }}</td>
+                    </tr>
+                {% endif %}
+                
+                <!-- <button type="submit" class="btn btn-warning"><i class="bi bi-pencil"></i> Cập nhật giỏ hàng</button> -->
+            </div>
+        </div>
+
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit Quantity</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editForm" method = "POST">
+                            <input type="hidden" id="productId">
+                            <div class="mb-3">
+                                <label for="quantity" class="form-label">Quantity</label>
+                                <input type="integer" class="form-control" id="quantity" name="quantity" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function openEditModal(productId) {
+                fetch(`/update_cart/${productId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.error) {
+                            console.error('Error:', data.error);
+                            alert('Error: ' + data.error);
+                        } else {
+                            // Populate the form fields with the product data
+                            document.getElementById('productId').value = data.id;
+                            document.getElementById('quantity').value = data.quantity;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error fetching product data: ' + error.message);
+                    });
+    
+    
+            }
+    
+            document.getElementById('editForm').onsubmit = function(event) {
+                event.preventDefault();
+                const productId = document.getElementById('productId').value;
+                const quantity = document.getElementById('quantity').value;
+                console.log('Submitting form with id:', productId, 'quantity:', quantity);
+
+
+                const data = {
+                    quantity: quantity
+                };
+
+                if (!productId) {
+                    console.error('ID is missing');
+                    alert('Invalid product ID');
+                    return;
+                }           
+    
+                fetch(`/update_cart/${productId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                })
+                .then(response => {
+                    console.log('Response status:', response.status); 
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Received response data:', data);
+                    if (data.success) {
+                        alert("Product updated successfully!");
+                        location.reload(); // Refresh to show the updated table
+                    } else {
+                        alert("Error updating product: " + (data.error || 'Unknown error'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error updating product: ' + error.message);
+                });
+            }
+        </script>
+        <div class="p-3">
+            <a href="{{ url_for('home') }}" class="btn btn-secondary"><i class="bi bi-house-door"></i> Back Home</a>
+        </div>
+
+    </section>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
